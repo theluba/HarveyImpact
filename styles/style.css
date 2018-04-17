@@ -41,10 +41,14 @@
     color: #777;
 }
 
+.demo-legend {
+    display: none;
+}
 .legend {
     line-height: 18px;
     color: #555;
 }
+
 .legend i {
     width: 18px;
     height: 18px;
@@ -52,6 +56,14 @@
     margin-right: 8px;
     opacity: .7;
 }
+
+
+.leaflet-tile-pane    { z-index: 2; }
+.leaflet-objects-pane { z-index: 3; }
+.leaflet-overlay-pane { z-index: 4; }
+.leaflet-shadow-pane  { z-index: 5; }
+.leaflet-marker-pane  { z-index: 6; }
+.leaflet-popup-pane   { z-index: 7; }
 
 
 /* Style the footer */

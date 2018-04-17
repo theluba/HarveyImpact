@@ -5,30 +5,23 @@ var map = L.map('map', {
   zoom: 10,
 });
 
-// adds base reality
-var basicBaseLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHViYWd1emVpIiwiYSI6ImNqMTd6YmcxOTA2NmUycW83Nnc3bHppMXUifQ.I5MeLgSRNHdBztBDWvQmbA', {
-    maxZoom: 18,
-    attribution: ' © Luba Guzei, ' + '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
-        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-        'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    id: 'mapbox.light'
-}).addTo(map);
+
 
 
 // // this is to see something in a basic blue
-// function style(features) {
-//     return {
-//         fillColor: 'lightblue',
-//         weight: .5,
-//         opacity: 1,
-//         color: 'blue',
-//         // color: 'blue',
-//         fillOpacity: 0.7
-//     };
-// }
+function style(features) {
+    return {
+        fillColor: 'lightblue',
+        weight: .5,
+        opacity: 1,
+        color: 'blue',
+        // color: 'blue',
+        fillOpacity: 0.7
+    };
+}
 
 // Choropleth view
-function getColor(d) {
+function getColorHarvImpact(d) {
     return d > 30000 ? '#660000' :
            d > 20000 ? '#cc0000' :
            d > 10000   ? '#ff6666' :
@@ -46,7 +39,7 @@ function getColor(d) {
 // Choropleth style for Block Group Layer
 function styleHarveyBG(feature) {
     return {
-        fillColor: getColor(feature.properties.Harvey_Affected_Units_Total),
+        fillColor: getColorHarvImpact(feature.properties.Harvey_Affected_Units_Total),
         weight: .5,
         opacity: 1,
         color: 'white',
@@ -58,7 +51,7 @@ function styleHarveyBG(feature) {
 // Choropleth style for CC and SNB Layers
 function styleHarveyCCSNB(feature) {
     return {
-        fillColor: getColor(feature.properties.HarveyAffectTotalUnits),
+        fillColor: getColorHarvImpact(feature.properties.HarveyAffectTotalUnits),
         weight: .5,
         opacity: 1,
         color: 'white',
@@ -66,6 +59,111 @@ function styleHarveyCCSNB(feature) {
         fillOpacity: 0.7
     };
 }
+
+// ************************
+// Color for different flood zones
+
+function getColorFP(d) {
+    return  d == '500Yr' ? '#6b8fd1' :
+            d == '100Yr' ? '#36479c' :
+            d == 'Outside' ? '#91c2f7' :
+            d == 'Floodway' ? '#080a6e' :
+            d == 'noSSPEEDdata' ? 'red':
+            d == 'Levee' ? 'green' :
+                      'transparent';
+}
+
+function styleHarveyFP(feature) {
+    return {
+        fillColor: getColorFP(feature.properties.SSPEEDFloodplain),
+        weight: .5,
+        opacity: 1,
+        color: 'white',
+        // dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
+// ************************
+
+// COLOR FOR ETHNICITY QUARTILES
+function getColorBlack(d) {
+    return d > 75 ? '#336600' :
+           d > 50 ? '#59b300' :
+           d > 25   ? '#8cff1a' :
+           d > 0 ? ' #b3ff66' :
+                      'transparent';
+}
+
+
+    // Choropleth style for Block Group Layer
+function styleBlack(feature) {
+    return {
+        fillColor: getColorBlack(feature.properties.NH_Black/feature.properties.Total_Pop*100),
+        weight: .5,
+        opacity: 1,
+        color: 'white',
+        // dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
+// Hispanic
+
+function getColorHispanic(d) {
+    return d > 75 ? '#00b3b3' :
+           d > 50 ? '#00ffff' :
+           d > 25   ? '#66ffff' :
+           d > 0 ? '#b3ffff' :
+                      'transparent';
+}
+
+    // Choropleth style for Block Group Layer
+function styleHispanic(feature) {
+    return {
+        fillColor: getColorHispanic(feature.properties.Hispanic/feature.properties.Total_Pop*100),
+        weight: .5,
+        opacity: 1,
+        color: 'white',
+        // dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
+// White
+
+function getColorWhite(d) {
+    return d > 75 ? '#b36b00' :
+           d > 50 ? '#ff9900' :
+           d > 25   ? '#ffb84d' :
+           d > 0 ? '#ffcc80' :
+                      'transparent';
+}
+
+    // Choropleth style for Block Group Layer
+function styleWhite(feature) {
+    return {
+        fillColor: getColorWhite(feature.properties.NH_White/feature.properties.Total_Pop*100),
+        weight: .5,
+        opacity: 1,
+        color: 'white',
+        // dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
+
+
+// ************************
+function styleTransparent(feature) {
+    return {
+        fillColor: 'transparent',
+        color: 'transparent',
+    };
+}
+
+
+// ************************
 
 // Color blocks by district
 function getColorDist(d) {
@@ -161,11 +259,24 @@ function styleHarveySN(feature) {
 
 // info.addTo(map);
 
+// adds base reality
+var basicBaseLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibHViYWd1emVpIiwiYSI6ImNqMTd6YmcxOTA2NmUycW83Nnc3bHppMXUifQ.I5MeLgSRNHdBztBDWvQmbA', {
+    maxZoom: 18,
+    attribution: ' © Luba Guzei, ' + '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
+        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+        'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    id: 'mapbox.light'
+}).addTo(map);
+
+// ADDS LAYERS FOR HARVEY IMPACT
+var baseMapRevert = L.geoJson(blockGroupJSON, {style: styleTransparent})
+
 var blockGroupLayer = L.geoJson(blockGroupJSON, {style: styleHarveyBG,
     onEachFeature: function(feature, layer){
-        layer.bindPopup('Units affected:' + feature.properties.Harvey_Affected_Units_Total);
+        layer.bindPopup('Units affected:' + feature.properties.Harvey_Affected_Units_Total +'<p> Portion affected: ' + parseInt(feature.properties.Harvey_Affected_Units_Total)/parseInt(feature.properties.Total_Pop)*100);
     }
-}).addTo(map);
+})
+
 
 var cityCouncilLayer = L.geoJson(cityCouncilJSON, {style: styleHarveyCCSNB,
     onEachFeature: function(feature, layer){
@@ -175,6 +286,7 @@ var cityCouncilLayer = L.geoJson(cityCouncilJSON, {style: styleHarveyCCSNB,
     }
 })
 
+
 var superNBLayer = L.geoJson(superNBJSON, {style: styleHarveyCCSNB,
     onEachFeature: function(feature, layer){
         unitsAffected = Math.round(feature.properties.HarveyAffectTotalUnits),
@@ -182,6 +294,42 @@ var superNBLayer = L.geoJson(superNBJSON, {style: styleHarveyCCSNB,
         layer.bindPopup('Super Neighborhood: '+ feature.properties.SNBNAME + '<p> Units affected: ' + unitsAffected.toLocaleString());
     }
 })
+
+
+// ADDS LAYERS AT BLOCK GROUP LEVEL OF DEMOGRAPHICS
+
+var blockGroupBlack = L.geoJson(blockGroupJSON, {style: styleBlack,
+    onEachFeature: function(feature, layer){
+        layer.bindPopup('Black (Non-Hispanic) Population :' + feature.properties.NH_Black +'<p> Total Population: ' + feature.properties.Total_Pop +'<p> Percent African American Population: ' + parseInt(feature.properties.NH_Black/feature.properties.Total_Pop*100)+'%');
+    }
+})
+
+var blockGroupHispanic = L.geoJson(blockGroupJSON, {style: styleHispanic,
+    onEachFeature: function(feature, layer){
+        layer.bindPopup('Hispanic Population:' + feature.properties.Hispanic +'<p> Total Population: ' + feature.properties.Total_Pop +'<p> Percent Hispanic Population: ' + parseInt(feature.properties.Hispanic/feature.properties.Total_Pop*100)+'%');
+    }
+})
+
+var blockGroupWhite = L.geoJson(blockGroupJSON, {style: styleWhite,
+    onEachFeature: function(feature, layer){
+        layer.bindPopup('White (Non-Hispanic) Population:' + feature.properties.NH_White +'<p> Total Population: ' + feature.properties.Total_Pop +'<p> Percent White Population: ' + parseInt(feature.properties.NH_White/feature.properties.Total_Pop*100)+'%');
+    }
+})
+
+
+// var floodplainLayer = L.geoJson(floodplainJSON, {style: styleHarveyFP,
+//     onEachFeature: function(feature, layer){
+//         layer.bindPopup('SSPEED Data: '+ feature.properties.SSPEEDFloodplain);
+//     }
+// })
+
+// var floodplainSimpleLayer = L.geoJson(floodplainSimpleJSON, {style: styleHarveyFP,
+//     onEachFeature: function(feature, layer){
+//         // unitsWDecimals = Math.number.toLocaleString(unitsAffected),
+//         layer.bindPopup('Type of Zone: '+ feature.properties.ZONE_SUBTY);
+//     }
+// })
+
 
 // var blockGroupLayer = L.geoJson(blockGroupJSON, {style: styleHarveyBG}).addTo(map),
 // var cityCouncilLayer = L.geoJson(cityCouncilJSON, {style: styleHarveyCCSNB})
@@ -204,10 +352,27 @@ var superNBLayer = L.geoJson(superNBJSON, {style: styleHarveyCCSNB,
 //     "streets": basicBaseLayer
 // }
 
+var baseMaps = {
+    "Street View": baseMapRevert,
+    "African American Population": blockGroupBlack,
+    "Hispanic Population": blockGroupHispanic,
+    "White Population": blockGroupWhite
+    // "Flood Plain": floodplainLayer
+    // "Flood Simple Plain": floodplainSimpleLayer
+    // "FEMA no subty" : FEMAnoSUBTYLayer, 
+    // "FEMA 500 Yr" : FEMA500YrFEMALayer, 
+    // "FEMA In Hazard" : FEMAminhazardLayer, 
+    // "FEMA Reduced Risk b/c Levee" : FEMAreducedriskbcLeveeLayer, 
+    // "FEMA Floodway" : FEMAfloodwayLayer, 
+    // "FEMA Riverine Floodway" : FEMAriverinefloodwayLayer
+}
+
 var overlayMaps = {
-    "Block Groups": blockGroupLayer,
-    "Super Neighborhoods": superNBLayer,
-    "City Council Districts": cityCouncilLayer
+    "Flooding: Block Groups": blockGroupLayer,
+    "Flooding: Super Neighborhoods": superNBLayer,
+    "Flooding: City Council Districts": cityCouncilLayer,
+    // "Flood Plain": floodplainLayer
+    // "Flood Simple Plain": floodplainSimpleLayer
     // "FEMA no subty" : FEMAnoSUBTYLayer, 
     // "FEMA 500 Yr" : FEMA500YrFEMALayer, 
     // "FEMA In Hazard" : FEMAminhazardLayer, 
@@ -221,7 +386,7 @@ var overlayMaps = {
 // var marker2 = L.marker([29.7604, -95.3698]).addTo(map);
 
 
-L.control.layers(null, overlayMaps).addTo(map);
+L.control.layers(baseMaps, overlayMaps).addTo(map);
 
 
 // // ************
@@ -317,10 +482,53 @@ L.control.layers(null, overlayMaps).addTo(map);
 // ************
 // Add legend to the map
 // ************
-var legend = L.control({position: 'bottomright'});
+var demoColorFuncs = {
+  white: getColorWhite,
+  black: getColorBlack,
+  hispanic: getColorHispanic
+}
 
-legend.onAdd = function (map) {
+function createDemoLegend(demographic) {
+  var legend = L.control(
+    {position: 'bottomleft'})
+  legend.onAdd = function (map) {
 
+      var idString = 'legend-' + demographic,
+          div = L.DomUtil.create('div', 'info legend demo-legend'),
+          grades = [0, 25, 50, 75],
+          labels = ["<strong> Percentage of Population</strong>"],
+          // labels = [],
+          from, 
+          to;
+
+      // set id so its visibility can be toggled with onbaselayerchange
+      div.id = idString
+      // loop through our density intervals and generate a label with a colored square for each interval
+      for (var i = 0; i < grades.length; i++) {
+          from = grades[i];
+          to = grades[i + 1];
+
+          labels.push(
+              '<i style="background:' + demoColorFuncs[demographic](from + 1) + '"></i> ' +
+              from + (to ? '&ndash;' + to : '+'));
+      }
+    div.innerHTML = labels.join('<br>');
+    legend.id = idString
+    return div;
+  };
+  legend.addTo(map)
+  return legend
+}
+
+var harveyLegend = L.control({position: 'bottomright'}),
+    whiteLegend = createDemoLegend('white'),
+    hispanicLegend = createDemoLegend('hispanic'),
+    blackLegend = createDemoLegend('black'),
+    currentDemoLegend = whiteLegend
+
+// window.wl = whiteLegend
+
+harveyLegend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'info legend'),
         grades = [0, 100, 250, 500, 1000, 2500, 5000, 7500, 10000, 20000, 30000],
         labels = ["<strong> Units Affected (estimated)</strong>"],
@@ -333,14 +541,105 @@ legend.onAdd = function (map) {
             to = grades[i + 1];
 
         labels.push(
-            '<i style="background:' + getColor(from + 1) + '"></i> ' +
+            '<i style="background:' + getColorHarvImpact(from + 1) + '"></i> ' +
             from + (to ? '&ndash;' + to : '+'));
     }
   div.innerHTML = labels.join('<br>');
   return div;
 };
 
-legend.addTo(map);
+harveyLegend.addTo(map);
+
+function switchBaseLayerLegend(newBase) {
+  var baseLayerName = newBase.name
+  if (currentDemoLegend) {
+    console.log(document.querySelector('#' + currentDemoLegend.id))
+    console.log(currentDemoLegend.id)
+    document.querySelector('#' + currentDemoLegend.id).style.display = 'none'
+  }
+  if (baseLayerName === "African American Population") {
+    currentDemoLegend = blackLegend
+    document.querySelector('#' + currentDemoLegend.id).style.display = 'block'
+  }
+  if (baseLayerName === "Hispanic Population") {
+  currentDemoLegend = hispanicLegend
+  document.querySelector('#' + currentDemoLegend.id).style.display = 'block'
+  }
+  if (baseLayerName === "White Population") {
+  currentDemoLegend = whiteLegend
+  document.querySelector('#' + currentDemoLegend.id).style.display = 'block'
+  }
+}
+
+map.on('baselayerchange',switchBaseLayerLegend)
+
+
+// ***********
+
+// var floodLegend = L.control({position: 'bottomright'});
+
+// floodLegend.onAdd = function (map) {
+
+//     var div = L.DomUtil.create('div', 'info legend'),
+//         grades = [0, 100, 250, 500, 1000, 2500, 5000, 7500, 10000, 20000, 30000],
+//         labels = ["<strong> Units Affected (estimated)</strong>"],
+//         // labels = [],
+//         from, to;
+
+//     // loop through our density intervals and generate a label with a colored square for each interval
+//     for (var i = 0; i < grades.length; i++) {
+//         from = grades[i];
+//             to = grades[i + 1];
+
+//         labels.push(
+//             '<i style="background:' + getColorHarvImpact(from + 1) + '"></i> ' +
+//             from + (to ? '&ndash;' + to : '+'));
+//     }
+//   div.innerHTML = labels.join('<br>');
+//   return div;
+// };
+
+// var ethnicityLegend = L.control({position: 'bottomright'});
+
+// ethnicityLegend.onAdd = function (map) {
+
+//     var div = L.DomUtil.create('div', 'info legend'),
+//         grades = [0, 100, 250],
+//         labels = ["<strong> Units Affected (estimated)</strong>"],
+//         // labels = [],
+//         from, to;
+
+//     // loop through our density intervals and generate a label with a colored square for each interval
+//     for (var i = 0; i < grades.length; i++) {
+//         from = grades[i];
+//             to = grades[i + 1];
+
+//         labels.push(
+//             '<i style="background:' + getColorCC(from + 1) + '"></i> ' +
+//             from + (to ? '&ndash;' + to : '+'));
+//     }
+//   div.innerHTML = labels.join('<br>');
+//   return div;
+// };
+
+
+// var layerToLegendMapping={
+//   "Flooding": floodLegend,
+//   "Ethnicity/Race": ethnicityLegend
+// }
+// function legendAdd(event) {
+//   var layername = event.name;
+//   map.addControl(layerToLegendMapping[layername]);
+// }
+
+// function legendRemove(event) {
+//   var layername = event.name;
+//   map.removeControl(layerToLegendMapping[layername]);
+// }
+
+// map.on('baselayerchange',legendAdd);
+// // map.on('overlayremove',legendRemove);
+
 
 
 // // ************
