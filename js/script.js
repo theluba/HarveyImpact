@@ -36,20 +36,9 @@ function getColorHarvImpact(d) {
                       'transparent';
 }
 
-// Choropleth style for Block Group Layer
-function styleHarveyBG(feature) {
-    return {
-        fillColor: getColorHarvImpact(feature.properties.Harvey_Affected_Units_Total),
-        weight: .5,
-        opacity: 1,
-        color: 'white',
-        // dashArray: '3',
-        fillOpacity: 0.7
-    };
-}
-
-// Choropleth style for CC and SNB Layers
-function styleHarveyCCSNB(feature) {
+// TOTAL UNITS
+// Choropleth style for Block Group Layer Total Units
+function styleHarveyTotalUnits(feature) {
     return {
         fillColor: getColorHarvImpact(feature.properties.HarveyAffectTotalUnits),
         weight: .5,
@@ -59,6 +48,19 @@ function styleHarveyCCSNB(feature) {
         fillOpacity: 0.7
     };
 }
+
+// Multi Units
+function styleHarveyMultiUnits(feature) {
+    return {
+        fillColor: getColorHarvImpact(feature.properties.HarveyAffectTotalUnits - feature.properties.HarveyAffectSingleUnits),
+        weight: .5,
+        opacity: 1,
+        color: 'white',
+        // dashArray: '3',
+        fillOpacity: 0.7
+    };
+}
+
 
 // ************************
 // Color for different flood zones
@@ -165,80 +167,80 @@ function styleTransparent(feature) {
 
 // ************************
 
-// Color blocks by district
-function getColorDist(d) {
-    return d == 'A' ? 'black' :
-           d == 'B' ? 'lavender' :
-           d == 'C'  ? 'blue' :
-           d == 'D'  ? 'yellow' :
-           d == 'E'  ? 'green' :
-           d == 'F'  ? 'pink' :
-           d == 'G'  ? 'purple' :
-           d == 'H'  ? 'brown' :
-           d == 'I'  ? 'orange' :
-           d == 'J'  ? 'teal' :
-           d == 'K'  ? 'peach' :
-                      'white';
-}
+// // Color blocks by district
+// function getColorDist(d) {
+//     return d == 'A' ? 'black' :
+//            d == 'B' ? 'lavender' :
+//            d == 'C'  ? 'blue' :
+//            d == 'D'  ? 'yellow' :
+//            d == 'E'  ? 'green' :
+//            d == 'F'  ? 'pink' :
+//            d == 'G'  ? 'purple' :
+//            d == 'H'  ? 'brown' :
+//            d == 'I'  ? 'orange' :
+//            d == 'J'  ? 'teal' :
+//            d == 'K'  ? 'peach' :
+//                       'white';
+// }
 
-function styleCouncilDist(feature) {
-    return {
-        fillColor: getColorDist(feature.properties.primaryCC),
-        weight: .5,
-        opacity: 1,
-        color: 'white',
-        // dashArray: '3',
-        fillOpacity: 0.7
-    };
-}
+// function styleCouncilDist(feature) {
+//     return {
+//         fillColor: getColorDist(feature.properties.primaryCC),
+//         weight: .5,
+//         opacity: 1,
+//         color: 'white',
+//         // dashArray: '3',
+//         fillOpacity: 0.7
+//     };
+// }
 
 
-function getColorCC(d) {
-    return d > 35000 ? 'black' :
-           d > 30000  ? 'green' :
-           d > 25000  ? 'blue' :
-           d > 20000  ? 'pink' :
-           d > 15000   ? 'yellow' :
-           d > 10000   ? 'orange' :
-           d > 5000   ? 'orange' :
-           d > 0 ? 'orange' :
-                      'white';
-}
+// function getColorCC(d) {
+//     return d > 35000 ? 'black' :
+//            d > 30000  ? 'green' :
+//            d > 25000  ? 'blue' :
+//            d > 20000  ? 'pink' :
+//            d > 15000   ? 'yellow' :
+//            d > 10000   ? 'orange' :
+//            d > 5000   ? 'orange' :
+//            d > 0 ? 'orange' :
+//                       'white';
+// }
 
-function styleCC(feature) {
-    return {
-        fillColor: getColorCC(feature.properties.HarveyAffectTotalUnits),
-        weight: .5,
-        opacity: 1,
-        color: 'white',
-        // dashArray: '3',
-        fillOpacity: 0.7
-    };
-}
+// function styleCC(feature) {
+//     return {
+//         fillColor: getColorCC(feature.properties.HarveyAffectTotalUnits),
+//         weight: .5,
+//         opacity: 1,
+//         color: 'white',
+//         // dashArray: '3',
+//         fillOpacity: 0.7
+//     };
+// }
 
-// *************For SNs
-function getColorSN(d) {
-    return d > 10000 ? 'black' :
-           d > 8000  ? '#99000D' :
-           d > 6000  ? '#CB181D' :
-           d > 4000  ? '#EF3B2C' :
-           d > 2000   ? '#FB6A4A' :
-           d > 1000   ? '#FC9272' :
-           d > 500   ? '#FCBBA1' :
-           d > 0 ? 'pink' :
-                      'white';
-}
+// // *************For SNs
+// function getColorSN(d) {
+//     return d > 10000 ? 'black' :
+//            d > 8000  ? '#99000D' :
+//            d > 6000  ? '#CB181D' :
+//            d > 4000  ? '#EF3B2C' :
+//            d > 2000   ? '#FB6A4A' :
+//            d > 1000   ? '#FC9272' :
+//            d > 500   ? '#FCBBA1' :
+//            d > 0 ? 'pink' :
+//                       'white';
+// }
 
-function styleHarveySN(feature) {
-    return {
-        fillColor: getColorSN(feature.properties.HarveyAffectTotalUnits),
-        weight: .5,
-        opacity: 1,
-        color: 'white',
-        // dashArray: '3',
-        fillOpacity: 0.7
-    };
-}
+// function styleHarveySN(feature) {
+//     return {
+//         fillColor: getColorSN(feature.properties.HarveyAffectTotalUnits),
+//         weight: .5,
+//         opacity: 1,
+//         color: 'white',
+//         // dashArray: '3',
+//         fillOpacity: 0.7
+//     };
+// }
 
 
 // // Adds info box on the top
@@ -271,14 +273,14 @@ var basicBaseLayer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{
 // ADDS LAYERS FOR HARVEY IMPACT
 var baseMapRevert = L.geoJson(blockGroupJSON, {style: styleTransparent})
 
-var blockGroupLayer = L.geoJson(blockGroupJSON, {style: styleHarveyBG,
+var blockGroupLayer = L.geoJson(blockGroupJSON, {style: styleHarveyTotalUnits,
     onEachFeature: function(feature, layer){
-        layer.bindPopup('Units affected:' + feature.properties.Harvey_Affected_Units_Total +'<p> Portion affected: ' + parseInt(feature.properties.Harvey_Affected_Units_Total)/parseInt(feature.properties.Total_Pop)*100);
+        layer.bindPopup('Units affected:' + feature.properties.HarveyAffectTotalUnits +'<p> Portion affected: ' + parseInt(feature.properties.HarveyAffectTotalUnits)/parseInt(feature.properties.Total_Pop)*100);
     }
 })
 
 
-var cityCouncilLayer = L.geoJson(cityCouncilJSON, {style: styleHarveyCCSNB,
+var cityCouncilLayer = L.geoJson(cityCouncilJSON, {style: styleHarveyTotalUnits,
     onEachFeature: function(feature, layer){
         unitsAffected = Math.round(feature.properties.HarveyAffectTotalUnits),
         // unitsWDecimals = Math.number.toLocaleString(unitsAffected),
@@ -287,11 +289,37 @@ var cityCouncilLayer = L.geoJson(cityCouncilJSON, {style: styleHarveyCCSNB,
 })
 
 
-var superNBLayer = L.geoJson(superNBJSON, {style: styleHarveyCCSNB,
+var superNBLayer = L.geoJson(superNBJSON, {style: styleHarveyTotalUnits,
     onEachFeature: function(feature, layer){
         unitsAffected = Math.round(feature.properties.HarveyAffectTotalUnits),
         // unitsWDecimals = Math.number.toLocaleString(unitsAffected),
         layer.bindPopup('Super Neighborhood: '+ feature.properties.SNBNAME + '<p> Units affected: ' + unitsAffected.toLocaleString());
+    }
+})
+
+// ADDS LAYERS FOR BLOCK GROUP, CITY COUNCIL DIST AND NEIGHBORHOODS FOR MULTI FAMILY
+var blockGroupLayerMF = L.geoJson(blockGroupJSON, {style: styleHarveyMultiUnits,
+    onEachFeature: function(feature, layer){
+        MFunitsAffected = (feature.properties.HarveyAffectTotalUnits - feature.properties.HarveyAffectSingleUnits)
+        layer.bindPopup('Units affected: ' + feature.properties.HarveyAffectTotalUnits);
+    }
+})
+
+
+var cityCouncilLayerMF = L.geoJson(cityCouncilJSON, {style: styleHarveyMultiUnits,
+    onEachFeature: function(feature, layer){
+        MFunitsAffected = Math.round(feature.properties.HarveyAffectTotalUnits - feature.properties.HarveyAffectSingleUnits),
+        // unitsWDecimals = Math.number.toLocaleString(unitsAffected),
+        layer.bindPopup('City Council District: '+ feature.properties.DISTRICT + '<p> Estimated Multi-family Units affected: ' + MFunitsAffected.toLocaleString());
+    }
+})
+
+
+var superNBLayerMF = L.geoJson(superNBJSON, {style: styleHarveyMultiUnits,
+    onEachFeature: function(feature, layer){
+        MFunitsAffected = Math.round(feature.properties.HarveyAffectTotalUnits - feature.properties.HarveyAffectSingleUnits),
+        // unitsWDecimals = Math.number.toLocaleString(unitsAffected),
+        layer.bindPopup('Super Neighborhood: '+ feature.properties.SNBNAME + '<p> Estimated Multi-family Units affected: ' + MFunitsAffected.toLocaleString());
     }
 })
 
@@ -368,9 +396,12 @@ var baseMaps = {
 }
 
 var overlayMaps = {
-    "Flooding: Block Groups": blockGroupLayer,
-    "Flooding: Super Neighborhoods": superNBLayer,
-    "Flooding: City Council Districts": cityCouncilLayer,
+    "Flooding Total Units: Block Groups": blockGroupLayer,
+    "Flooding Total Units: Super Neighborhoods": superNBLayer,
+    "Flooding Total Units: City Council Districts": cityCouncilLayer,
+    "Flooding Multi-Family Units: Block Groups": blockGroupLayerMF,
+    "Flooding Multi-Family Units: Super Neighborhoods": superNBLayerMF,
+    "Flooding Multi-Family Units: Citu Council Districts": cityCouncilLayerMF
     // "Flood Plain": floodplainLayer
     // "Flood Simple Plain": floodplainSimpleLayer
     // "FEMA no subty" : FEMAnoSUBTYLayer, 
